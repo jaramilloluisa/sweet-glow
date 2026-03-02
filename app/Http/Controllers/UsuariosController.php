@@ -87,8 +87,9 @@ class UsuariosController extends Controller {
             'num_documento'  => 'sometimes|string|max:20',
             'telefono'  => 'sometimes|string|max:20',
             'direccion'  => 'sometimes|string|max:255',
-            'correo' => 'sometimes|email|unique:usuarios,correo',
-            'contrasena' => 'sometimes|min:6'
+            'correo' => 'sometimes|email|unique:usuarios,correo,' . $id . ',id_usuario',
+            'contrasena' => 'sometimes|min:6',
+            'id_rol' => 'sometimes|integer',
         ]);
 
         if (isset($validated['nombres']))     $user->nombres = $validated['nombres'];
@@ -99,6 +100,7 @@ class UsuariosController extends Controller {
         if (isset($validated['direccion']))     $user->direccion = $validated['direccion'];
         if (isset($validated['correo']))     $user->correo = $validated['correo'];
         if (isset($validated['contrasena'])) $user->contrasena = bcrypt($validated['contrasena']);
+        if (isset($validated['id_rol']))     $user->id_rol = $validated['id_rol'];
 
         $user->update();
 
