@@ -100,3 +100,6 @@ class TarjetasRegaloController extends Controller
         return response()->json(['mensaje' => 'Tarjeta eliminada correctamente']);
     }
 }
+
+
+

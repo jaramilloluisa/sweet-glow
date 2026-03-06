@@ -66,9 +66,11 @@ class RolesController extends Controller
         }
 
         $validated = $request->validate([
+            'id_rol' => 'sometimes|string|max:100',
             'nombre' => 'sometimes|string|max:100|unique:roles,nombre'
         ]);
 
+        if (isset($validated['id_rol']))     $rol->id_rol = $validated['id_rol'];
         if (isset($validated['nombre']))     $rol->nombre = $validated['nombre'];
 
         $rol->update();

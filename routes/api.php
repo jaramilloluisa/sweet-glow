@@ -31,6 +31,10 @@ Route::apiResource('gift_guide', App\Http\Controllers\GuiaRegalosController::cla
 
 Route::apiResource('products', App\Http\Controllers\ProductosController::class);
 
+Route::apiResource('images', App\Http\Controllers\ImagenesController::class);
 
+Route::apiResource('gift_cards', App\Http\Controllers\TarjetasRegaloController::class);
 
+Route::apiResource('order_invoice', App\Http\Controllers\FacturaPedidosController::class);
 
+Route::apiResource('carts', App\Http\Controllers\CarritosController::class);
