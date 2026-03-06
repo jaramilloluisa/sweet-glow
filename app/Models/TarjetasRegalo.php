@@ -52,5 +52,4 @@ class TarjetasRegalo extends Model
         $this->fecha_de_uso = Carbon::now();
         $this->save();
     }
-
 }
