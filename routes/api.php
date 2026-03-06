@@ -31,7 +31,6 @@ Route::apiResource('gift_guide', App\Http\Controllers\GuiaRegalosController::cla
 
 Route::apiResource('products', App\Http\Controllers\ProductosController::class);
 
-Route::apiResource('images', App\Http\Controllers\ImagenesController::class);
 
 
 
