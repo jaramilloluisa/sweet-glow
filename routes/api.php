@@ -33,5 +33,5 @@ Route::apiResource('products', App\Http\Controllers\ProductosController::class);
 
 Route::apiResource('images', App\Http\Controllers\ImagenesController::class);
 
-
+Route::apiResource('gift_cards', App\Http\Controllers\TarjetasRegaloController::class);
 
