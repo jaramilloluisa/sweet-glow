@@ -33,5 +33,11 @@ Route::apiResource('products', App\Http\Controllers\ProductosController::class);
 
 Route::apiResource('images', App\Http\Controllers\ImagenesController::class);
 
+Route::apiResource('premios', App\Http\Controllers\PremioController::class);
+
+Route::apiResource('premiados', App\Http\Controllers\PremiadosController::class);
+
+
+
 
 
