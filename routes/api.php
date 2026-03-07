@@ -33,6 +33,10 @@ Route::apiResource('products', App\Http\Controllers\ProductosController::class);
 
 Route::apiResource('images', App\Http\Controllers\ImagenesController::class);
 
+Route::apiResource('premios', App\Http\Controllers\PremioController::class);
+
+Route::apiResource('premiados', App\Http\Controllers\PremiadosController::class);
+
 Route::apiResource('gift_cards', App\Http\Controllers\TarjetasRegaloController::class);
 
 Route::apiResource('order_invoice', App\Http\Controllers\FacturaPedidosController::class);
