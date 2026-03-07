@@ -37,7 +37,10 @@ Route::apiResource('premios', App\Http\Controllers\PremioController::class);
 
 Route::apiResource('premiados', App\Http\Controllers\PremiadosController::class);
 
+Route::apiResource('gift_cards', App\Http\Controllers\TarjetasRegaloController::class);
 
+Route::apiResource('order_invoice', App\Http\Controllers\FacturaPedidosController::class);
 
+Route::apiResource('carts', App\Http\Controllers\CarritosController::class);
 
-
+Route::apiResource('gift_registrations', App\Http\Controllers\InscripcionesRegaloController::class);
