@@ -44,3 +44,5 @@ Route::apiResource('order_invoice', App\Http\Controllers\FacturaPedidosControlle
 Route::apiResource('carts', App\Http\Controllers\CarritosController::class);
 
 Route::apiResource('gift_registrations', App\Http\Controllers\InscripcionesRegaloController::class);
+
+Route::apiResource('reviews', App\Http\Controllers\ResenasController::class);
