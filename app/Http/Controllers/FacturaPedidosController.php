@@ -11,7 +11,7 @@ class FacturaPedidosController extends Controller {
      * Display a listing of the resource.
      */
     public function index(){
-        $facturaPedidos = FacturaPedidos::all();
+        $facturaPedidos = FacturaPedidos::paginate(5);
 
         return response()->json($facturaPedidos);
     }

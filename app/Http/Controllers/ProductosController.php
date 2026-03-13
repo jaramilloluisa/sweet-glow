@@ -11,7 +11,7 @@ class ProductosController extends Controller {
      * Display a listing of the resource.
      */
     public function index(){
-        $productos = Productos::all();
+        $productos = Productos::paginate(5);
 
         return response()->json($productos);
     }

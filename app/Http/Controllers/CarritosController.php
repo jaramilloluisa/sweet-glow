@@ -11,7 +11,7 @@ class CarritosController extends Controller {
      * Display a listing of the resource.
      */
     public function index(){
-        $carritos = Carritos::all();
+        $carritos = Carritos::paginate(5);
 
         return response()->json($carritos);
     }
