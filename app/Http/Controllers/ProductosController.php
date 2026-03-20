@@ -10,8 +10,20 @@ class ProductosController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index(){
-        $productos = Productos::paginate(5);
+    public function index(Request $request){
+        $search = $request->search;
+        
+        $productos = Productos::with([
+            'categoria',
+            'marca',
+            'referencia_producto',
+            'guiaRegalo'
+        ])->when($search, function ($query, $search) {
+            $query->where('nombre', 'like', "%{$search}%")
+                  ->orWhere('descripcion', 'like', "%{$search}%")
+                  ->orWhere('stock', 'like', "%{$search}%")
+                  ->orWhere('precio', 'like', "%{$search}%");
+        })->paginate(5);
 
         return response()->json($productos);
     }
@@ -62,7 +74,12 @@ class ProductosController extends Controller {
      */
     public function show(string $id)
     {
-        $producto = Productos::find($id);
+        $producto = Productos::with([
+            'categoria',
+            'marca',
+            'referencia_producto',
+            'guiaRegalo'
+        ])->find($id);
 
         if (!$producto) {
             return response()->json([

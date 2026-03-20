@@ -10,8 +10,14 @@ class FacturaPedidosController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index(){
-        $facturaPedidos = FacturaPedidos::paginate(5);
+    public function index(Request $request){
+        $search = $request->search;
+
+        $facturaPedidos = FacturaPedidos::with([
+            'usuario',
+        ])->when($search, function ($query, $search) {
+            $query->where('id_factura_pedido', 'like', "%{$search}%");
+        })->paginate(5);
 
         return response()->json($facturaPedidos);
     }
@@ -42,7 +48,7 @@ class FacturaPedidosController extends Controller {
      */
     public function show(string $id)
     {
-        $facturaPedido = FacturaPedidos::find($id);
+        $facturaPedido = FacturaPedidos::with(['usuario'])->find($id);
 
         if (!$facturaPedido) {
             return response()->json([
@@ -67,10 +73,12 @@ class FacturaPedidosController extends Controller {
         }
 
         $validated = $request->validate([
+            'id_usuario'  => 'sometimes|numeric',
             'neto'  => 'sometimes|numeric',
         ]);
 
         if (isset($validated['neto']))     $facturaPedido->neto = $validated['neto'];
+        if (isset($validated['id_usuario']))     $facturaPedido->id_usuario = $validated['id_usuario'];
 
         $facturaPedido->update();
 

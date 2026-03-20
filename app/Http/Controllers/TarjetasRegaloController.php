@@ -9,9 +9,13 @@ use Carbon\Carbon;
 class TarjetasRegaloController extends Controller
 {
     // 🔹 LISTAR TODAS LAS TARJETAS
-    public function index()
+    public function index(Request $request)
     {
-        $tarjetas = TarjetasRegalo::with('usuario')->get();
+        $search = $request->search;
+
+        $tarjetas = TarjetasRegalo::with('usuario')->when($search, function ($query, $search) {
+            $query->where('id_tarjeta', 'like', "%{$search}%");
+        })->paginate(5);
         return response()->json($tarjetas);
     }
 

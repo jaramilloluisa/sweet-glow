@@ -10,8 +10,18 @@ class UsuariosController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index(){
-        $users = Usuarios::paginate(5);
+    public function index(Request $request){
+        $search = $request->search;
+
+        $users = Usuarios::with([
+            'rol',
+        ])->when($search, function ($query, $search) {
+            $query->where('nombres', 'like', "%{$search}%")
+                  ->orWhere('apellidos', 'like', "%{$search}%")
+                  ->orWhere('correo', 'like', "%{$search}%")
+                  ->orWhere('num_documento', 'like', "%{$search}%")
+                  ->orWhere('telefono', 'like', "%{$search}%");
+        })->paginate(5);
 
         return response()->json($users);
     }

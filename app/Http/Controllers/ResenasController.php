@@ -106,4 +106,16 @@ class ResenasController extends Controller
             'message' => 'Reseña eliminada correctamente'
         ]);
     }
+
+    // obtener reseñas por producto
+    public function getByProduct($id){
+        $resenas = Resena::with([
+                'producto',
+                'usuario'
+            ])->when($id, function ($query, $id) {
+            $query->where('id_producto', 'like', "%{$id}%");
+        })->get();
+
+        return response()->json($resenas);
+    }
 }
