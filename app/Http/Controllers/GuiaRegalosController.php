@@ -7,38 +7,30 @@ use App\Models\GuiaRegalos;
 
 class GuiaRegalosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $guias = GuiaRegalos::all();
-
+        $guias = GuiaRegalos::paginate(5);
         return response()->json($guias);
-
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:150|unique:guia_regalos,nombre',
+            'nombre'      => 'required|string|max:150|unique:guia_regalos,nombre',
             'descripcion' => 'nullable|string|max:255'
         ]);
 
         $guia = GuiaRegalos::create([
-            'nombre' => $validated['nombre'],
+            'nombre'      => $validated['nombre'],
             'descripcion' => $validated['descripcion'] ?? null
         ]);
 
-        return response()->json($guia, 201);
-    } 
+        return response()->json([
+            'message' => 'Guía de regalos creada correctamente',
+            'data'    => $guia
+        ], 201);
+    }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $guia = GuiaRegalos::find($id);
@@ -52,9 +44,6 @@ class GuiaRegalosController extends Controller
         return response()->json($guia);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $guia = GuiaRegalos::find($id);
@@ -62,29 +51,25 @@ class GuiaRegalosController extends Controller
         if (!$guia) {
             return response()->json([
                 'message' => 'Guía de regalos no encontrada'
-            ]);
+            ], 404);
         }
 
         $validated = $request->validate([
-            'nombre' => 'sometimes|string|max:150|unique:guia_regalos,nombre,' . $id . ',id_guia',
+            'nombre'      => 'sometimes|string|max:150|unique:guia_regalos,nombre,' . $id . ',id_guia',
             'descripcion' => 'nullable|string|max:255'
         ]);
 
-        if (isset($validated['nombre'])) {
-            $guia->nombre = $validated['nombre'];
-        }
+        if (isset($validated['nombre'])) $guia->nombre = $validated['nombre'];
+        if (array_key_exists('descripcion', $validated)) $guia->descripcion = $validated['descripcion'];
 
-        if (array_key_exists('descripcion', $validated)) {
-            $guia->descripcion = $validated['descripcion'];
-        }
-        $guia->update();
+        $guia->save();
 
-        return response()->json($guia);
+        return response()->json([
+            'message' => 'Guía de regalos actualizada correctamente',
+            'data'    => $guia
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $guia = GuiaRegalos::find($id);
@@ -99,6 +84,6 @@ class GuiaRegalosController extends Controller
 
         return response()->json([
             'message' => 'Guía de regalos eliminada correctamente'
-        ]);
+        ], 200);
     }
 }

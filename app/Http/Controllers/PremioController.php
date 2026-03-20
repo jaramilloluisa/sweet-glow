@@ -9,9 +9,8 @@ class PremioController extends Controller
 {
     public function index()
     {
-        return response()->json(
-            Premio::with('producto')->get()
-        );
+        $premios = Premio::with('producto')->paginate(5);
+        return response()->json($premios);
     }
 
     public function store(Request $request)
@@ -22,7 +21,10 @@ class PremioController extends Controller
 
         $premio = Premio::create($validated);
 
-        return response()->json($premio, 201);
+        return response()->json([
+            'message' => 'Premio creado correctamente',
+            'data'    => $premio
+        ], 201);
     }
 
     public function show(string $id)
@@ -36,17 +38,24 @@ class PremioController extends Controller
         return response()->json($premio);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $premio = Premio::find($id);
-             
+
         if (!$premio) {
             return response()->json(['message' => 'Premio no encontrado'], 404);
+        }
 
-    }
-            $premio->update($request->all());
-            
-        return response()->json($premio, 200);
+        $validated = $request->validate([
+            'id_producto' => 'required|exists:productos,id_producto'
+        ]);
+
+        $premio->update($validated);
+
+        return response()->json([
+            'message' => 'Premio actualizado correctamente',
+            'data'    => $premio
+        ], 200);
     }
 
     public function destroy(string $id)
@@ -59,6 +68,6 @@ class PremioController extends Controller
 
         $premio->delete();
 
-        return response()->json(['message' => 'Premio eliminado']);
+        return response()->json(['message' => 'Premio eliminado correctamente'], 200);
     }
 }

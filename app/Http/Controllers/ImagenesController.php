@@ -4,75 +4,97 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Imagenes;
-use Illuminate\Support\Facades\Storage; // Importante para borrar archivos
+use Illuminate\Support\Facades\Storage;
 
 class ImagenesController extends Controller
 {
-    // 1. LISTAR TODO
     public function index()
     {
-        return response()->json(Imagenes::all(), 200);
+        $imagenes = Imagenes::with('producto')->paginate(5);
+        return response()->json($imagenes);
     }
 
-    // 2. GUARDAR IMAGEN
     public function store(Request $request)
     {
         $request->validate([
-            'filename' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'filename'    => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'id_producto' => 'required|exists:productos,id_producto'
         ]);
 
-        if ($request->hasFile('filename')) {
-            // Guarda en storage/app/public/imagenes_productos
-            $path = $request->file('filename')->store('imagenes_productos', 'public');
+        $path = $request->file('filename')->store('imagenes_productos', 'public');
 
-            $imagen = Imagenes::create([
-                'filename' => $path,
-                'id_producto' => $request->id_producto
-            ]);
+        $imagen = Imagenes::create([
+            'filename'    => $path,
+            'id_producto' => $request->id_producto
+        ]);
 
-            return response()->json(['message' => 'Creado', 'data' => $imagen], 201);
+        return response()->json([
+            'message' => 'Imagen creada correctamente',
+            'data'    => $imagen
+        ], 201);
+    }
+
+    public function show(string $id)
+    {
+        $imagen = Imagenes::find($id);
+
+        if (!$imagen) {
+            return response()->json([
+                'message' => 'Imagen no encontrada'
+            ], 404);
         }
+
+        return response()->json($imagen);
     }
 
-    // 3. VER UNA SOLA IMAGEN
-    public function show($id)
+    public function update(Request $request, string $id)
     {
         $imagen = Imagenes::find($id);
-        if (!$imagen) return response()->json(['message' => 'No encontrado'], 404);
-        return response()->json($imagen, 200);
-    }
 
-    // 4. ACTUALIZAR (Cambiar una imagen por otra)
-    public function update(Request $request, $id)
-    {
-        $imagen = Imagenes::find($id);
-        if (!$imagen) return response()->json(['message' => 'No encontrado'], 404);
+        if (!$imagen) {
+            return response()->json([
+                'message' => 'Imagen no encontrada'
+            ], 404);
+        }
+
+        $request->validate([
+            'filename'    => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'id_producto' => 'sometimes|exists:productos,id_producto'
+        ]);
 
         if ($request->hasFile('filename')) {
-            // Borramos la imagen vieja del disco
             Storage::disk('public')->delete($imagen->filename);
-            
-            // Subimos la nueva
             $path = $request->file('filename')->store('imagenes_productos', 'public');
-            $imagen->update(['filename' => $path]);
+            $imagen->filename = $path;
         }
-        
-        return response()->json(['message' => 'Actualizado', 'data' => $imagen], 200);
+
+        if ($request->filled('id_producto')) {
+            $imagen->id_producto = $request->id_producto;
+        }
+
+        $imagen->save();
+
+        return response()->json([
+            'message' => 'Imagen actualizada correctamente',
+            'data'    => $imagen
+        ], 200);
     }
 
-    // 5. ELIMINAR (Limpieza total)
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $imagen = Imagenes::find($id);
-        if (!$imagen) return response()->json(['message' => 'No encontrado'], 404);
 
-        // Borra el archivo físico de storage/app/public/...
+        if (!$imagen) {
+            return response()->json([
+                'message' => 'Imagen no encontrada'
+            ], 404);
+        }
+
         Storage::disk('public')->delete($imagen->filename);
-
-        // Borra el registro de la BD
         $imagen->delete();
 
-        return response()->json(['message' => 'Eliminado físicamente y de la BD'], 200);
+        return response()->json([
+            'message' => 'Imagen eliminada correctamente'
+        ], 200);
     }
 }
