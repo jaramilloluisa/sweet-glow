@@ -46,3 +46,4 @@ Route::apiResource('carts', App\Http\Controllers\CarritosController::class);
 Route::apiResource('gift_registrations', App\Http\Controllers\InscripcionesRegaloController::class);
 
 Route::apiResource('reviews', App\Http\Controllers\ResenasController::class);
+Route::get('reviews/product/{id}', [App\Http\Controllers\ResenasController::class, 'getByProduct']);

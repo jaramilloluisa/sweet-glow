@@ -11,7 +11,12 @@ class CarritosController extends Controller {
      * Display a listing of the resource.
      */
     public function index(){
-        $carritos = Carritos::paginate(5);
+        $carritos = Carritos::with([
+            'usuario',
+            'producto',
+            "facturaPedido",
+            "tarjetaRegalo"
+        ])->paginate(5);
 
         return response()->json($carritos);
     }
@@ -50,7 +55,12 @@ class CarritosController extends Controller {
      */
     public function show(string $id)
     {
-        $carrito = Carritos::find($id);
+        $carrito = Carritos::with([
+            'usuario',
+            'producto',
+            "facturaPedido",
+            "tarjetaRegalo"
+        ])->find($id);
 
         if (!$carrito) {
             return response()->json([
