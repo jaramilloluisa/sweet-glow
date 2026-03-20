@@ -24,6 +24,14 @@ class InscripcionRegalo extends Model
 
     public $timestamps = false;
 
+        protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->created_at = now();
+        });
+    }
+
     // Relación con usuarios
     public function usuario()
     {
