@@ -20,6 +20,7 @@ Route::group([
 Route::apiResource('roles', App\Http\Controllers\RolesController::class);
 
 Route::apiResource('users', App\Http\Controllers\UsuariosController::class);
+Route::get('users/carts/{id}', [App\Http\Controllers\UsuariosController::class, 'findCarts']);
 
 Route::apiResource('categories', App\Http\Controllers\CategoriasController::class);
 
@@ -40,10 +41,14 @@ Route::apiResource('premiados', App\Http\Controllers\PremiadosController::class)
 Route::apiResource('gift_cards', App\Http\Controllers\TarjetasRegaloController::class);
 
 Route::apiResource('order_invoice', App\Http\Controllers\FacturaPedidosController::class);
-
+Route::apiResource("invoices_carts", App\Http\Controllers\FacturasCarritosController::class);
 Route::apiResource('carts', App\Http\Controllers\CarritosController::class);
+Route::apiResource('cart-elements', App\Http\Controllers\ElementosCarritosController::class);
 
 Route::apiResource('gift_registrations', App\Http\Controllers\InscripcionesRegaloController::class);
 
 Route::apiResource('reviews', App\Http\Controllers\ResenasController::class);
 Route::get('reviews/product/{id}', [App\Http\Controllers\ResenasController::class, 'getByProduct']);
+
+Route::post('/create-preference', [App\Http\Controllers\PaymentController::class, 'createPreference']);
+Route::post('/webhook/mercadopago', [App\Http\Controllers\WebhookController::class, 'handle']);

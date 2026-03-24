@@ -34,5 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'mp' => [
+        'token' => env('MP_ACCESS_TOKEN'),
+    ],
 
 ];

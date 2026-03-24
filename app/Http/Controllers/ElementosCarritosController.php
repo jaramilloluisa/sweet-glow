@@ -3,23 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Carritos;
+use App\Models\ElementosCarritos;
 
-class CarritosController extends Controller {
-    
+class ElementosCarritosController extends Controller
+{
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request){
-        $search = $request->search;
-        $carritos = Carritos::with([
-            'usuario',
-            "elementos"
-        ])->when($search, function ($query, $search) {
-            $query->where('id_carrito', '=', "{$search}");
-        })->paginate(10);
+    public function index(){
+        $elementosCarritos = ElementosCarritos::with([
+            'producto',
+            "carrito"
+        ])->paginate(5);
 
-        return response()->json($carritos);
+        return response()->json($elementosCarritos);
     }
 
     /**
@@ -28,13 +25,17 @@ class CarritosController extends Controller {
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_usuario'  => 'required|integer',
-            'status'  => 'required|string',
+            'id_carrito'  => 'required|integer',
+            'id_producto'  => 'required|integer',
+            'cantidad'  => 'required|integer',
+            'price'  => 'required|integer',
         ]);
 
-        $carrito = Carritos::create([
-            'id_usuario' => $validated['id_usuario'],
-            'status' => $validated['status'],
+        $carrito = ElementosCarritos::create([
+            'id_carrito' => $validated['id_carrito'],
+            'id_producto' => $validated['id_producto'],
+            'cantidad' => $validated['cantidad'],
+            'price' => $validated['price'],
         ]);
 
         return response()->json([
@@ -48,9 +49,9 @@ class CarritosController extends Controller {
      */
     public function show(string $id)
     {
-        $carrito = Carritos::with([
-            'usuario',
-            "elementos"
+        $carrito = ElementosCarritos::with([
+            'producto',
+            "carrito"
         ])->find($id);
 
         if (!$carrito) {
@@ -67,7 +68,7 @@ class CarritosController extends Controller {
      */
     public function update(Request $request, string $id)
     {
-        $carrito = Carritos::find($id);
+        $carrito = ElementosCarritos::find($id);
 
         if (!$carrito) {
             return response()->json([
@@ -76,12 +77,16 @@ class CarritosController extends Controller {
         }
 
         $validated = $request->validate([
-            'id_usuario'  => 'sometimes|integer',
-            'status'  => 'sometimes|string',
+            'id_carrito'  => 'sometimes|integer',
+            'id_producto'  => 'sometimes|integer',
+            'cantidad'  => 'sometimes|integer',
+            'price'  => 'sometimes|integer',
         ]);
 
-        if (isset($validated['id_usuario']))     $carrito->id_usuario = $validated['id_usuario'];
-        if (isset($validated['status']))     $carrito->status = $validated['status'];
+        if (isset($validated['id_carrito']))     $carrito->id_carrito = $validated['id_carrito'];
+        if (isset($validated['id_producto']))     $carrito->id_producto = $validated['id_producto'];
+        if (isset($validated['cantidad']))     $carrito->cantidad = $validated['cantidad'];
+        if (isset($validated['price']))     $carrito->price = $validated['price'];
 
         $carrito->update();
 
@@ -96,7 +101,7 @@ class CarritosController extends Controller {
      */
     public function destroy(string $id)
     {
-        $carrito = Carritos::find($id);
+        $carrito = ElementosCarritos::find($id);
 
         if (!$carrito) {
             return response()->json([
@@ -111,4 +116,3 @@ class CarritosController extends Controller {
         ], 200);
     }
 }
-

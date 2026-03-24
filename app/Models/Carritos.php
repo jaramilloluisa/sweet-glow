@@ -15,30 +15,16 @@ class Carritos extends Model
 
     protected $fillable = [
         'id_usuario',
-        'cantidad',
-        'descuento',
-        'id_producto',
-        'id_factura_pedido',
-        'id_tarjeta'
+        'status',
     ];
 
     public function usuario()
     {
-        return $this->belongsTo(Usuarios::class, 'id_usuario', 'id_usuario');
+        return $this->belongsTo(Usuarios::class, 'id_usuario');
     }
 
-    public function producto()
+    public function elementos()
     {
-        return $this->belongsTo(Productos::class, 'id_producto', 'id_producto');
-    }
-
-    public function facturaPedido()
-    {
-        return $this->belongsTo(FacturaPedidos::class, 'id_factura_pedido', 'id_factura_pedido');
-    }
-
-    public function tarjetaRegalo()
-    {
-        return $this->belongsTo(TarjetasRegalo::class, 'id_tarjeta', 'id_tarjeta');
+        return $this->hasMany(ElementosCarritos::class, 'id_carrito', 'id_carrito');
     }
 }
