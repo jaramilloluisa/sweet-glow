@@ -9,7 +9,7 @@ class PremiadosController extends Controller
 {
     public function index()
     {
-        $premiados = Premiados::with(['usuario', 'premio'])->paginate(5);
+        $premiados = Premiados::with(['usuario', 'premio.producto'])->paginate(5);
         return response()->json($premiados);
     }
 
