@@ -9,6 +9,7 @@ class Premiados extends Model
 {
     use HasFactory;
 
+    protected $table = 'premiados';
     protected $primaryKey = 'id_premiado';
 
     protected $fillable = [
@@ -25,10 +26,5 @@ class Premiados extends Model
     public function premio()
     {
         return $this->belongsTo(Premio::class, 'id_premio', 'id_premio');
-    }
-
-    public function inscripcion()
-    {
-        return $this->belongsTo(InscripcionesRegalo::class, 'id_inscripcion', 'id_inscripcion');
     }
 }

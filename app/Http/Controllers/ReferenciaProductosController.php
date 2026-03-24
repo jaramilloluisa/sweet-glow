@@ -9,7 +9,8 @@ class ReferenciaProductosController extends Controller
 {
     public function index()
     {
-        return response()->json(ReferenciaProductos::all(), 200);
+        $referencias = ReferenciaProductos::paginate(5);
+        return response()->json($referencias);
     }
 
     public function store(Request $request)
@@ -22,7 +23,10 @@ class ReferenciaProductosController extends Controller
 
         $referencia = ReferenciaProductos::create($validated);
 
-        return response()->json($referencia, 201);
+        return response()->json([
+            'message' => 'Referencia creada correctamente',
+            'data'    => $referencia
+        ], 201);
     }
 
     public function show(int $id)
@@ -56,7 +60,10 @@ class ReferenciaProductosController extends Controller
 
         $referencia->update($validated);
 
-        return response()->json($referencia, 200);
+        return response()->json([
+            'message' => 'Referencia actualizada correctamente',
+            'data'    => $referencia
+        ], 200);
     }
 
     public function destroy(int $id)
