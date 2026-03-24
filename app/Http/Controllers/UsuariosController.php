@@ -139,4 +139,18 @@ class UsuariosController extends Controller {
             'message' => 'Usuario eliminado correctamente'
         ], 200);
     }
+
+    public function findCarts($id){
+        $usuario = Usuarios::with('carritos.elementos')->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Usuario no encontrado'
+            ], 404);
+        }
+
+        $carritos = $usuario->carritos;
+
+        return response()->json($carritos);
+    }
 }

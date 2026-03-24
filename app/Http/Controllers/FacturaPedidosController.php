@@ -15,6 +15,8 @@ class FacturaPedidosController extends Controller {
 
         $facturaPedidos = FacturaPedidos::with([
             'usuario',
+            'carrito',
+            'tarjeta',
         ])->when($search, function ($query, $search) {
             $query->where('id_factura_pedido', 'like', "%{$search}%");
         })->paginate(5);
@@ -29,11 +31,19 @@ class FacturaPedidosController extends Controller {
     {
         $validated = $request->validate([
             'id_usuario'  => 'required|integer',
+            'id_carrito'  => 'required|integer',
+            'id_tarjeta'  => 'sometimes',
             'neto'  => 'required|numeric',
+            'descuento'  => 'required|numeric',
+            'status'  => 'required|string',
         ]);
 
         $facturaPedido = FacturaPedidos::create([
             'id_usuario' => $validated['id_usuario'],
+            'id_carrito' => $validated['id_carrito'],
+            'id_tarjeta' => $validated['id_tarjeta'],
+            'status' => $validated['status'],
+            'descuento' => $validated['descuento'],
             'neto' => $validated['neto'],
         ]);
 
@@ -48,7 +58,11 @@ class FacturaPedidosController extends Controller {
      */
     public function show(string $id)
     {
-        $facturaPedido = FacturaPedidos::with(['usuario'])->find($id);
+        $facturaPedido = FacturaPedidos::with([
+            'usuario',
+            'carrito',
+            'tarjeta',
+        ])->find($id);
 
         if (!$facturaPedido) {
             return response()->json([
@@ -73,12 +87,20 @@ class FacturaPedidosController extends Controller {
         }
 
         $validated = $request->validate([
-            'id_usuario'  => 'sometimes|numeric',
+            'id_usuario'  => 'sometimes|integer',
+            'id_carrito'  => 'sometimes|integer',
+            'id_tarjeta'  => 'sometimes',
             'neto'  => 'sometimes|numeric',
+            'descuento'  => 'sometimes|numeric',
+            'status'  => 'sometimes|string',
         ]);
 
         if (isset($validated['neto']))     $facturaPedido->neto = $validated['neto'];
         if (isset($validated['id_usuario']))     $facturaPedido->id_usuario = $validated['id_usuario'];
+        if (isset($validated['id_carrito']))     $facturaPedido->id_carrito = $validated['id_carrito'];
+        if (isset($validated['id_tarjeta']))     $facturaPedido->id_tarjeta = $validated['id_tarjeta'];
+        if (isset($validated['descuento']))     $facturaPedido->descuento = $validated['descuento'];
+        if (isset($validated['status']))     $facturaPedido->status = $validated['status'];
 
         $facturaPedido->update();
 
