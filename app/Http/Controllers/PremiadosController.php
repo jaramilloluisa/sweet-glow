@@ -9,16 +9,16 @@ class PremiadosController extends Controller
 {
     public function index()
     {
-        $premiados = Premiados::with(['usuario', 'premio', 'inscripcion'])->paginate(5);
+        $premiados = Premiados::with(['usuario', 'premio'])->paginate(5);
         return response()->json($premiados);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_premio'     => 'required|exists:premios,id_premio',
-            'id_usuario'    => 'required|exists:usuarios,id_usuario',
-            'id_inscripcion' => 'required|exists:inscripciones_regalo,id_inscripcion'
+            'id_premio'      => 'required|exists:premios,id_premio',
+            'id_usuario'     => 'required|exists:usuarios,id_usuario',
+            'id_inscripcion' => 'required|integer'
         ]);
 
         $premiado = Premiados::create($validated);
@@ -31,7 +31,7 @@ class PremiadosController extends Controller
 
     public function show($id)
     {
-        $premiado = Premiados::with(['usuario', 'premio', 'inscripcion'])->find($id);
+        $premiado = Premiados::with(['usuario', 'premio'])->find($id);
 
         if (!$premiado) {
             return response()->json(['message' => 'Premiado no encontrado'], 404);
@@ -49,9 +49,9 @@ class PremiadosController extends Controller
         }
 
         $validated = $request->validate([
-            'id_premio'     => 'sometimes|exists:premios,id_premio',
-            'id_usuario'    => 'sometimes|exists:usuarios,id_usuario',
-            'id_inscripcion' => 'sometimes|exists:inscripciones_regalo,id_inscripcion'
+            'id_premio'      => 'sometimes|exists:premios,id_premio',
+            'id_usuario'     => 'sometimes|exists:usuarios,id_usuario',
+            'id_inscripcion' => 'sometimes|integer'
         ]);
 
         $premiado->update($validated);

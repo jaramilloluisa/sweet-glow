@@ -27,9 +27,4 @@ class Premiados extends Model
     {
         return $this->belongsTo(Premio::class, 'id_premio', 'id_premio');
     }
-
-    public function inscripcion()
-    {
-        return $this->belongsTo(InscripcionesRegalo::class, 'id_inscripcion', 'id_inscripcion');
-    }
 }

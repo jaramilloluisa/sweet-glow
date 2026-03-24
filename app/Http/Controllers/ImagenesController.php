@@ -36,7 +36,7 @@ class ImagenesController extends Controller
 
     public function show(string $id)
     {
-        $imagen = Imagenes::find($id);
+        $imagen = Imagenes::with('producto')->find($id);
 
         if (!$imagen) {
             return response()->json([
