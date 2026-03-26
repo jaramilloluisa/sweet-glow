@@ -17,7 +17,7 @@ class GuiaRegalosController extends Controller
     {
         $validated = $request->validate([
             'nombre'      => 'required|string|max:150|unique:guia_regalos,nombre',
-            'descripcion' => 'nullable|string|max:255'
+            'descripcion' => 'required|string|max:255'
         ]);
 
         $guia = GuiaRegalos::create([
@@ -56,7 +56,7 @@ class GuiaRegalosController extends Controller
 
         $validated = $request->validate([
             'nombre'      => 'sometimes|string|max:150|unique:guia_regalos,nombre,' . $id . ',id_guia',
-            'descripcion' => 'nullable|string|max:255'
+            'descripcion' => 'required|string|max:255'
         ]);
 
         if (isset($validated['nombre'])) $guia->nombre = $validated['nombre'];
